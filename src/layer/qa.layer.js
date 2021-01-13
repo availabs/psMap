@@ -3,15 +3,12 @@ import MapLayer from 'AvlMap/MapLayer';
 import length from '@turf/length';
 import * as d3 from 'd3-scale';
 import DisplayComponent from './DisplayComponent.js';
-
-// const COLOR = 'rgba(255, 255, 255, 0.95)'
-const api = 'http://lor.availabs.org:9010';
-//const api = 'http://localhost:8080'
+import Charts from './chartsComponents';
 
 class ServiceCallLayer extends MapLayer {
   onAdd(map) {
     console.log('gonna fetch');
-    fetch('/data/test_data.json')
+    fetch('/data/Tucson_PS_18_20.json')
       .then((r) => r.json())
       .then((data) => {
         console.log('got data', data);
@@ -37,8 +34,46 @@ class ServiceCallLayer extends MapLayer {
           id: 'service-calls-heatmap',
           source: 'service-calls-src',
           type: 'heatmap',
+          // maxzoom: 20,
           paint: {
-            'heatmap-radius': 8,
+            // 'heatmap-color': [
+            //   'interpolate',
+            //   ['linear'],
+            //   ['heatmap-density'],
+            //   0,
+            //   'rgba(33,102,172,0)',
+            //   0.2,
+            //   'rgb(103,169,207)',
+            //   0.4,
+            //   'rgb(209,229,240)',
+            //   0.6,
+            //   'rgb(253,219,199)',
+            //   0.8,
+            //   'rgb(239,138,98)',
+            //   1,
+            //   'rgb(178,24,43)',
+            // ],
+            // Adjust the heatmap radius by zoom level
+            'heatmap-radius': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              0,
+              2,
+              12,
+              20,
+            ],
+            // Transition from heatmap to circle layer by zoom level
+            'heatmap-opacity': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              8,
+              1,
+              10,
+              0,
+            ],
+
             // 'heatmap-color': {
             //   stops: [
             //     [0.0, 'blue'],
@@ -49,8 +84,8 @@ class ServiceCallLayer extends MapLayer {
           },
         });
       });
-    let somedata = map.querySourceFeatures('service-calls-src');
-    console.log('source data', somedata);
+    // let somedata = map.querySourceFeatures('service-calls-src');
+    // console.log('source data', somedata);
   }
 }
 
@@ -60,6 +95,9 @@ export default (props = {}) =>
     serviceCallData: [],
     sources: [],
     layers: [],
+
+    meta: 'Not Defined Yet',
+
     onHover: {
       layers: ['service-calls'],
       dataFunc: function (feature) {
@@ -74,6 +112,7 @@ export default (props = {}) =>
     },
     popover: {
       layers: ['service-calls'],
+
       dataFunc: function (feature, map) {
         return [
           ...Object.keys(feature.properties).map((k) => [
@@ -88,19 +127,24 @@ export default (props = {}) =>
         comp: DisplayComponent,
         show: true,
       },
+      Charts: {
+        comp: Charts,
+        show: true,
+      },
+    },
+
+    modals: {
+      RingModal: {
+        title: 'Tree Ring Widths',
+        comp: ({ layer }) => {
+          return (
+            <div>
+              <Charts meta={layer.meta} />
+            </div>
+          );
+        },
+
+        show: false,
+      },
     },
   });
-
-function median(values) {
-  if (values.length === 0) return 0;
-
-  values.sort(function (a, b) {
-    return a - b;
-  });
-
-  var half = Math.floor(values.length / 2);
-
-  if (values.length % 2) return values[half];
-
-  return (values[half - 1] + values[half]) / 2.0;
-}
