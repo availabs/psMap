@@ -6,7 +6,7 @@ const json = require('big-json');
 const { features } = require('process');
 
 let path =
-  '../public/data/Tucson_Police_Calls_for_Service_2018_2020_Open_Data4326_2.geojson';
+  '../public/data/Tucson_Police_Calls_for_Service_2018_2020_Open_Data4326.geojson';
 
 const readStream = fs.createReadStream(path);
 const parseStream = json.createParseStream();

@@ -9,6 +9,7 @@ class ServiceCallLayer extends MapLayer {
   onAdd(map) {
     console.log('gonna fetch');
     fetch('/data/Tucson_PS_18_20.json')
+      // fetch('/data/test_data_1.json')
       .then((r) => r.json())
       .then((data) => {
         console.log('got data', data);
@@ -68,7 +69,7 @@ class ServiceCallLayer extends MapLayer {
               'interpolate',
               ['linear'],
               ['zoom'],
-              8,
+              5,
               1,
               10,
               0,
