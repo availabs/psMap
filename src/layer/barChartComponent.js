@@ -8,15 +8,23 @@ const BarChart = ({ data }) => {
     <ResponsiveBar
       data={data}
       keys={[
-        'CKWELF',
-        'FIGHT',
-        'OTHER',
-        'HU',
-        'T',
-        'DV',
-        'ACCIDENT',
-        'THREAT',
-        'ASSAULT',
+        'Traffic Accident (Property)',
+        'Larceny',
+        'Assault',
+        'Sex Offense',
+        'DUI',
+        'Criminal Damage',
+        'Miscellaneous',
+
+        // 'CKWELF',
+        // 'FIGHT',
+        // 'OTHER',
+        // 'HU',
+        // 'T',
+        // 'DV',
+        // 'ACCIDENT',
+        // 'THREAT',
+        // 'ASSAULT',
       ]}
       indexBy={'year'}
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}

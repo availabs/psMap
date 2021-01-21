@@ -4,12 +4,14 @@ import length from '@turf/length';
 import * as d3 from 'd3-scale';
 import DisplayComponent from './DisplayComponent.js';
 import Charts from './chartsComponents';
+import { EventSource } from './eventSource';
 
 class ServiceCallLayer extends MapLayer {
   onAdd(map) {
     console.log('gonna fetch');
     // fetch('/data/Tucson_PS_18_20.json')
-    fetch('/data/test_data_clean.json')
+    // fetch('/data/test_data_clean.json')
+    fetch('/data/test_data_2018_shp_qgis_1.json')
       .then((r) => r.json())
       .then((data) => {
         console.log('got data', data);
