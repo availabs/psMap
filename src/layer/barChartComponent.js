@@ -8,15 +8,15 @@ const BarChart = ({ data }) => {
     <ResponsiveBar
       data={data}
       keys={[
-        'CKWELF ',
-        'FIGHT ',
-        'OTHER ',
-        'HU ',
-        'T ',
-        'DV ',
+        'CKWELF',
+        'FIGHT',
+        'OTHER',
+        'HU',
+        'T',
+        'DV',
         'ACCIDENT',
-        'THREAT ',
-        'ASSAULT ',
+        'THREAT',
+        'ASSAULT',
       ]}
       indexBy={'year'}
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}

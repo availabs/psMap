@@ -14,7 +14,6 @@ const Charts = ({ layer }) => {
 
   // const callsByYearEventtype = d3.groups(
   //   layer.serviceCallData,
-
   //   (d) => d.year,
   //   (d) => d.eventType,
   // );
@@ -25,7 +24,6 @@ const Charts = ({ layer }) => {
   //   const { year, eventData } = row;
   //   return output;
   // }, []);
-
   // console.log('test-----', test);
 
   const callsByYearByEventCount = d3.rollups(
@@ -39,58 +37,41 @@ const Charts = ({ layer }) => {
 
   console.log('data', data);
 
+  //formating data with below formatData function
+  // data = [
+  //           [2018,[["CKWELF  ", 22399],["DV      ", 19082],....[]],
+  //           [2019,[["CKWELF  ", 22399],["DV      ", 19082],....[]],
+  //           [2020,[["CKWELF  ", 22399],["DV      ", 19082],....[]],
+  //         ]
+  // newData =[
+  //           {"year": 2018, "ACCIDENT": 1234,"FIGHT": 2365,....},
+  //           { "year":2019, "ACCIDENT": 2365, ....}, {'year: 2020,...},
+  //           {     }
+  //          ]
+
   function formatData(inArray) {
     let outJson = [];
     for (let i = 0; i < inArray.length; i++) {
+      //if (inArray[i][0] === 2018) {
       let obj = { year: inArray[i][0] };
       let attrs = inArray[i][1];
+
       for (let j = 0; j < attrs.length; j++) {
-        obj[attrs[j][0]] = attrs[j][1];
+        // let str = obj[attrs[j][0]];
+        let key = attrs[j][0];
+        obj[key.replace(/\s+$/, '')] = attrs[j][1];
+        //  or .trim()
       }
+
       outJson.push(obj);
+      //}
     }
     return outJson;
   }
+
   const newData = formatData(data);
 
   console.log('newData-------------', newData);
-
-  // const ary2018 = data[0];
-  // console.log('ary18', ary2018);
-
-  // const value18 = ary2018[0];
-  // console.log('v18', value18);
-
-  //const newData = [{ year: 2018, [data[0]]}, {year:2019, [data[1]]}, {year:2020, [data[2]]} ];
-  // console.log('newData--', newData);
-
-  // const entries = Object.entries(data);
-
-  // console.log('entries', entries);
-
-  // const values = Object.values(data)
-
-  //let newData = [{year:Object.keys(data), Object.values(data).map(key)=> {key,data[key]}}]
-
-  // Array.from(
-  //   data,
-  //   ([key, values]) => console.log('key, values------', key, values),
-
-  //   // (newData = []),
-  //   // (newData[i].year = key),
-  //   // (newData[i].accident = values.map((d) => d.ACCIDENT)),
-  // );
-
-  //const fight = callsByYearEventtype.get(2019).length;
-
-  // const Year19 = [
-  //   {
-  //     year: 2019,
-  //     FIGHT: fight,
-  //   },
-  // ];
-
-  // console.log('Year19', Year19);
 
   return (
     console.log('Chart layer', layer),

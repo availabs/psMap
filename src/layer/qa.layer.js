@@ -8,8 +8,8 @@ import Charts from './chartsComponents';
 class ServiceCallLayer extends MapLayer {
   onAdd(map) {
     console.log('gonna fetch');
-    fetch('/data/Tucson_PS_18_20.json')
-      // fetch('/data/test_data_1.json')
+    // fetch('/data/Tucson_PS_18_20.json')
+    fetch('/data/test_data_clean.json')
       .then((r) => r.json())
       .then((data) => {
         console.log('got data', data);
@@ -26,7 +26,7 @@ class ServiceCallLayer extends MapLayer {
           type: 'circle',
           source: 'service-calls-src',
           paint: {
-            'circle-radius': 4,
+            'circle-radius': 2,
             'circle-color': '#B42222',
           },
         });
@@ -85,8 +85,6 @@ class ServiceCallLayer extends MapLayer {
           },
         });
       });
-    // let somedata = map.querySourceFeatures('service-calls-src');
-    // console.log('source data', somedata);
   }
 }
 
