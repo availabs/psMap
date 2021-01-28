@@ -6,13 +6,16 @@ const json = require('big-json');
 const { features } = require('process');
 
 let path =
-  '../public/data/Tucson_Police_Calls_for_Service_2018_4326_esri.geojson';
+  //'../public/data/Tucson_Police_Calls_for_Service_2018_2020_Open_Data4326_api_3.geojson';
+  '../public/data/Tucson_Police_incidents_2018_2020_Open_Data_api_merged.geojson';
+// '../public/data/Tucson_Police_Calls_for_Service_2018_4326_esri.geojson';
 // '../public/data/Tucson_Police_Calls_for_Service_2018_2020_Open_Data4326_selected.geojson';
 // '../public/data/Tucson_Police_Incidents__2018_1.json'  //esri original
 
 const readStream = fs.createReadStream(path);
 const parseStream = json.createParseStream();
 
+// csv combined original
 // parseStream.on('data', function (pojo) {
 //   // => receive reconstructed POJO
 //   let output = { type: 'FeatureCollection', features: [] };
@@ -31,17 +34,22 @@ const parseStream = json.createParseStream();
 //   console.log(JSON.stringify(output));
 // });
 
+//api geojson
 parseStream.on('data', function (pojo) {
   // => receive reconstructed POJO
   let output = { type: 'FeatureCollection', features: [] };
   output.features = pojo.features.map((d) => {
+    // let yearOcc =  d.properties.DATE_OCCU.substring(0,4)
+    // console.log('yearOcc---',yearOcc)
     return {
       properties: {
         id: d.properties.OBJECTID,
         // date: d.properties.ACTDATE,
-        year: d.properties.YEAR_OCCU,
+        //year: d.properties.YEAR_REPT,
+        year: d.properties.DATE_OCCU.substring(0, 4),
         // fullDate: d.properties.ACTDATETIME,
-        eventType: d.properties.CrimeType,
+        eventCode: d.properties.OFFENSE,
+        eventType: d.properties.STATUTDESC,
       },
       geometry: d.geometry,
     };

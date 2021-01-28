@@ -11,7 +11,8 @@ class ServiceCallLayer extends MapLayer {
     console.log('gonna fetch');
     // fetch('/data/Tucson_PS_18_20.json')
     // fetch('/data/test_data_clean.json')
-    fetch('/data/test_data_2018_shp_qgis_1.json')
+    // fetch('/data/test_data_2018_shp_qgis_1.json')
+    fetch('/data/test_data_all_api_merged_yearocc.json')
       .then((r) => r.json())
       .then((data) => {
         console.log('got data', data);

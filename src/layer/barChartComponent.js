@@ -8,13 +8,13 @@ const BarChart = ({ data }) => {
     <ResponsiveBar
       data={data}
       keys={[
-        'Traffic Accident (Property)',
-        'Larceny',
-        'Assault',
-        'Sex Offense',
-        'DUI',
-        'Criminal Damage',
-        'Miscellaneous',
+        // 'Traffic Accident (Property)',
+        // 'Larceny',
+        // 'Assault',
+        // 'Sex Offense',
+        // 'DUI',
+        // 'Criminal Damage',
+        // 'Miscellaneous',
 
         // 'CKWELF',
         // 'FIGHT',
@@ -25,8 +25,18 @@ const BarChart = ({ data }) => {
         // 'ACCIDENT',
         // 'THREAT',
         // 'ASSAULT',
+
+        // 'LARCENY/SHOPLIFTING',
+        'GTA/STOLEN',
+        'BURGLARY/FORCIBLE ENTRY',
+        'ASSAULT/MINOR INJURY',
+        'FRAUD/DEFRAUDING',
+        'ROBBERY/RESIDENCE',
+        'DEATH/SUICIDE',
+        'HOMICIDE/MANSLAUGHTER',
+        'DISORDERLY CONDUCT/FAMILY FIGHT',
       ]}
-      indexBy={'year'}
+      indexBy="year"
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
       padding={0.3}
       groupMode="grouped"
