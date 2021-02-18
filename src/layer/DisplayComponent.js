@@ -19,13 +19,13 @@ const DisplayComponent = ({ layer }) => {
               color: colors.primary,
             }}
           >
-            Service Call Layer
+            Tucson Police Incidents (2018-2020)
             {/* <span style={{ float: 'right' }}>
               <input type="checkbox" />
             </span> */}
           </div>
           <div>
-            <h4>Total number of calls: {layer.serviceCallData.length}</h4>
+            <h4>Total number of incidents: {layer.serviceCallData.length}</h4>
           </div>
         </div>
       </div>
