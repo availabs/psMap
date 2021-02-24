@@ -84,7 +84,15 @@ const Charts = ({ layer }) => {
   }
 
   const newData = formatData(data);
+
   console.log('newData-------------', newData);
+  const size = layer.serviceCallData.length;
+  const view = size === 327659 || 0;
+
+  // const obj = newData[0];
+
+  // const size = Object.keys(obj).length;
+  console.log('size---', size, view);
 
   //format Linechart Data
   function formatLineData(inArray) {
@@ -148,11 +156,12 @@ const Charts = ({ layer }) => {
             color: colors.primary,
           }}
         >
-          Number of incidents by year
+          Number of incidents by Crime Category
         </div>
-        <div style={{ height: 350 }}>
+        <div style={{ height: 300 }}>
           <BarChart data={newData} />
         </div>
+
         <div
           style={{
             fontSize: '1.3em',
@@ -160,10 +169,16 @@ const Charts = ({ layer }) => {
             borderBottom: `1px solid ${colors.primary}`,
             color: colors.primary,
           }}
-        ></div>
+        >
+          Number of incidents under eacg crime category
+        </div>
 
-        <div style={{ height: 350 }}>
-          <LineChart data={lineData} />
+        <div style={{ height: 400 }}>
+          {view ? (
+            'only available after a crime category is selected'
+          ) : (
+            <LineChart data={lineData} />
+          )}
         </div>
       </div>
     )
