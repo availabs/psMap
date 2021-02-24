@@ -23,7 +23,8 @@ const Charts = ({ layer }) => {
     layer.serviceCallData,
     (v) => v.length,
     (d) => d.year,
-    (d) => d.eventType,
+    // (d) => d.eventType,
+    (d) => d.crimeCategory,
   );
   const data = callsByYearByEventCount;
   console.log('data', data);
@@ -139,7 +140,7 @@ const Charts = ({ layer }) => {
     console.log('Chart layer', layer),
     (
       <div style={{ backgroundColor: '#fff', padding: 15 }}>
-        {/* <div
+        <div
           style={{
             fontSize: '1.3em',
             fontWeigh: 500,
@@ -151,7 +152,7 @@ const Charts = ({ layer }) => {
         </div>
         <div style={{ height: 350 }}>
           <BarChart data={newData} />
-        </div> */}
+        </div>
         <div
           style={{
             fontSize: '1.3em',

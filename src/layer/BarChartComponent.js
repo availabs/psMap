@@ -29,15 +29,25 @@ const BarChart = ({ data }) => {
         // 'ASSAULT',
 
         // for incident data
-        'TRAFFIC ACCIDENT/PRP DMG/OTHER MOTOR VEHC',
-        'GTA/STOLEN',
-        'BURGLARY/FORCIBLE ENTRY',
-        'ASSAULT/MINOR INJURY',
-        'FRAUD/DEFRAUDING',
-        'ROBBERY/RESIDENCE',
-        'DEATH/SUICIDE',
-        'HOMICIDE/MANSLAUGHTER',
-        'DISORDERLY CONDUCT/FAMILY FIGHT',
+        // 'TRAFFIC ACCIDENT/PRP DMG/OTHER MOTOR VEHC',
+        // 'GTA/STOLEN',
+        // 'BURGLARY/FORCIBLE ENTRY',
+        // 'ASSAULT/MINOR INJURY',
+        // 'FRAUD/DEFRAUDING',
+        // 'ROBBERY/RESIDENCE',
+        // 'DEATH/SUICIDE',
+        // 'HOMICIDE/MANSLAUGHTER',
+        // 'DISORDERLY CONDUCT/FAMILY FIGHT',
+
+        //category
+        'Accident',
+        'Assist',
+        'Emergency',
+        'Other',
+        'Property',
+        'Quality of Life',
+        'Violation',
+        'Violent',
       ]}
       indexBy="year"
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}

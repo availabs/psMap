@@ -24,20 +24,14 @@ export class Dropdown extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  //const species = this.state.value;
-
   handleChange(event) {
     this.setState({ value: event.target.value });
     this.props.selectByCategory(event.target.value);
+    //this.selectByCategory(event.target.value);
     //this.props.layer.updateData('crimeCategory', event.target.value);
     console.log('event---', event.target.value);
-    //console.log('layer---', this.props.layer);
+    console.log('layer1---', this.props.layer);
   }
-
-  // componentDidMount() {
-  //   const speciesJson =;
-  //   this.setState({ values: speciesJson });
-  // }
 
   render() {
     return (

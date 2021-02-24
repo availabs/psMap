@@ -8,6 +8,11 @@ import { EventSource } from './eventSource';
 import { Dropdown } from './Dropdown';
 
 class ServiceCallLayer extends MapLayer {
+  constructor(...args) {
+    super(...args);
+
+    this.filterByCode = this.filterByCode.bind(this);
+  }
   onAdd(map) {
     console.log('gonna fetch');
     // fetch('/data/Tucson_PS_18_20.json')
@@ -140,7 +145,7 @@ class ServiceCallLayer extends MapLayer {
 
           // filter by code or category
           // this.filterByCode('0603');
-          //this.filterByCode('Violation');
+          // this.filterByCode('Violation');
         });
       });
   }
@@ -149,6 +154,7 @@ class ServiceCallLayer extends MapLayer {
     //1st try
     // this.serviceCallData = this.fullData.filter((d) => d.eventCode === code);
     // this.forceUpdate();
+    console.log('category----', category);
 
     //2nd try
     let filteredSource = {
@@ -159,6 +165,7 @@ class ServiceCallLayer extends MapLayer {
     };
     // resets geojson
     this.map.getSource('service-calls-src').setData(filteredSource);
+    //this.forceUpdate();
   }
 
   // render(map) {
@@ -224,12 +231,13 @@ export default (props = {}) =>
         comp: ({ layer }) => {
           return (
             <div>
-              <Dropdown selectByCategory={this.filterByCode()} />
+              <Dropdown selectByCategory={layer.filterByCode} layer={layer} />
               {/* <Dropdown /> */}
               {/* <Dropdown layer={layer} /> */}
             </div>
           );
         },
+        // comp: Dropdown,
         show: true,
       },
       // Overview: {
