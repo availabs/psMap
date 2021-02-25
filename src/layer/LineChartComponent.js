@@ -5,24 +5,24 @@ import { ResponsiveLine } from '@nivo/line';
 const LineChart = ({ data }) => {
   console.log('lineChartdata------------------------------', data);
 
-  var filteredData = data.filter((obj) => {
-    for (var key in obj) {
-      if (
-        obj[key] === 'TRAFFIC ACCIDENT/PRP DMG/OTHER MOTOR VEHC' ||
-        obj[key] === 'GTA/STOLEN' ||
-        obj[key] === 'BURGLARY/FORCIBLE ENTRY' ||
-        obj[key] === 'ASSAULT/MINOR INJURY' ||
-        obj[key] === 'FRAUD/DEFRAUDING' ||
-        obj[key] === 'ROBBERY/RESIDENCE' ||
-        obj[key] === 'DEATH/SUICIDE' ||
-        obj[key] === 'HOMICIDE/MANSLAUGHTER' ||
-        obj[key] === 'DISORDERLY CONDUCT/FAMILY FIGHT'
-      ) {
-        return true;
-      }
-    }
-    return false;
-  });
+  // var filteredData = data.filter((obj) => {
+  //   for (var key in obj) {
+  //     if (
+  //       obj[key] === 'TRAFFIC ACCIDENT/PRP DMG/OTHER MOTOR VEHC' ||
+  //       obj[key] === 'GTA/STOLEN' ||
+  //       obj[key] === 'BURGLARY/FORCIBLE ENTRY' ||
+  //       obj[key] === 'ASSAULT/MINOR INJURY' ||
+  //       obj[key] === 'FRAUD/DEFRAUDING' ||
+  //       obj[key] === 'ROBBERY/RESIDENCE' ||
+  //       obj[key] === 'DEATH/SUICIDE' ||
+  //       obj[key] === 'HOMICIDE/MANSLAUGHTER' ||
+  //       obj[key] === 'DISORDERLY CONDUCT/FAMILY FIGHT'
+  //     ) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // });
 
   //console.log('filteredData------------------------------', filteredData);
 
@@ -36,7 +36,7 @@ const LineChart = ({ data }) => {
         type: 'linear',
         min: 'auto',
         max: 'auto',
-        stacked: true,
+        stacked: false,
         reverse: false,
       }}
       yFormat=" >-.2f"

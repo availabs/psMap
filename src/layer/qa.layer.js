@@ -23,7 +23,7 @@ class ServiceCallLayer extends MapLayer {
     fetch('/data/tucson_api_merge_all_new_1.json') //incident data with crime category
       .then((r) => r.json())
       .then((data) => {
-        console.log('got data', data);
+        //console.log('got data', data);
         this.serviceCallData = data.features.map((d) => d.properties);
         this.fullData = this.serviceCallData;
         this.geojsonFull = data;
@@ -54,23 +54,6 @@ class ServiceCallLayer extends MapLayer {
           type: 'heatmap',
           // maxzoom: 20,
           paint: {
-            // 'heatmap-color': [
-            //   'interpolate',
-            //   ['linear'],
-            //   ['heatmap-density'],
-            //   0,
-            //   'rgba(33,102,172,0)',
-            //   0.2,
-            //   'rgb(103,169,207)',
-            //   0.4,
-            //   'rgb(209,229,240)',
-            //   0.6,
-            //   'rgb(253,219,199)',
-            //   0.8,
-            //   'rgb(239,138,98)',
-            //   1,
-            //   'rgb(178,24,43)',
-            // ],
             // Adjust the heatmap radius by zoom level
             'heatmap-radius': [
               'interpolate',
@@ -91,32 +74,6 @@ class ServiceCallLayer extends MapLayer {
               10,
               0,
             ],
-
-            // 'heatmap-color': [
-            //   'interpolate',
-            //   ['linear'],
-            //   ['heatmap-density'],
-            //   0,
-            //   'rgba(33,102,172,0)',
-            //   0.2,
-            //   'rgb(103,169,207)',
-            //   0.4,
-            //   'rgb(209,229,240)',
-            //   0.6,
-            //   'rgb(253,219,199)',
-            //   0.8,
-            //   'rgb(239,138,98)',
-            //   1,
-            //   'rgb(178,24,43)',
-            // ],
-
-            // 'heatmap-color': {
-            //   stops: [
-            //     [0.0, 'blue'],
-            //     [0.5, 'yellow'],
-            //     [1.0, 'red'],
-            //   ],
-            // },
           },
         });
 
@@ -127,10 +84,7 @@ class ServiceCallLayer extends MapLayer {
             layers: ['service-calls'],
           });
 
-          console.log('features----', features);
-
-          // this.serviceCallData = features.map((d) => d.properties);
-          //this.forceUpdate();
+          //  console.log('features----', features);
 
           this.serviceCallData = features.map((d) => d.properties);
 
@@ -151,38 +105,32 @@ class ServiceCallLayer extends MapLayer {
   }
 
   filterByCode(category) {
-    //1st try
-    // this.serviceCallData = this.fullData.filter((d) => d.eventCode === code);
-    // this.forceUpdate();
-    console.log('category----', category);
+    //  console.log('category----', category);
 
-    //2nd try
-    let filteredSource = {
-      type: 'FeatureCollection',
-      features: this.geojsonFull.features.filter(
-        (d) => d.properties.crimeCategory === category,
-      ),
-    };
+    if (category === 'All Categories') {
+      //resets geojson (map)
+      let fullSource = this.geojsonFull;
+      this.map.getSource('service-calls-src').setData(fullSource);
 
-    // resets geojson (map)
-    this.map.getSource('service-calls-src').setData(filteredSource);
+      //reset charts
+      this.serviceCallData = this.fullData;
+      this.forceUpdate();
+    } else {
+      let filteredSource = {
+        type: 'FeatureCollection',
+        features: this.geojsonFull.features.filter(
+          (d) => d.properties.crimeCategory === category,
+        ),
+      };
 
-    //reset serviceCallData (charts)
-    this.serviceCallData = filteredSource.features.map((d) => d.properties);
-    this.forceUpdate();
+      // resets geojson (map)
+      this.map.getSource('service-calls-src').setData(filteredSource);
+
+      //reset serviceCallData (charts)
+      this.serviceCallData = filteredSource.features.map((d) => d.properties);
+      this.forceUpdate();
+    }
   }
-
-  // render(map) {
-  //   if (this.crimeCategory === 'All Categories') {
-  //     map.setFilter('service-calls-src', ['has', 'crimeCategory']);
-  //   } else {
-  //     map.setFilter('service-calls-src', [
-  //       '==',
-  //       ['get', 'crimeCategory'],
-  //       this.crimeCategory,
-  //     ]);
-  //   }
-  // }
 }
 
 export default (props = {}) =>
@@ -191,12 +139,6 @@ export default (props = {}) =>
     serviceCallData: [],
     sources: [],
     layers: [],
-
-    // updateData: function (k, v) {
-    //   this[k] = v;
-    //   this.render(this.map);
-    // },
-    // crimeCategory: 'All Category',
 
     meta: 'Not Defined Yet',
 
@@ -244,10 +186,6 @@ export default (props = {}) =>
         // comp: Dropdown,
         show: true,
       },
-      // Overview: {
-      //   comp: Dropdown,
-      //   show: true,
-      // },
 
       Charts: {
         title: '',
@@ -258,16 +196,10 @@ export default (props = {}) =>
 
     // modals: {
     //   RingModal: {
-    //     title: 'Tree Ring Widths',
-    //     comp: ({ layer }) => {
-    //       return (
-    //         <div>
-    //           <Charts meta={layer.meta} />
-    //         </div>
-    //       );
-    //     },
+    //     title: 'Ranking',
+    //     comp: Ranking,
 
-    //     show: false,
+    //     show: true,
     //   },
     // },
   });

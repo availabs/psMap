@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import BarChart from './BarChartComponent';
 import LineChart from './LineChartComponent';
+import RankingChart from './RankingChartComponent';
 import { values } from 'lodash';
 
 const Charts = ({ layer }) => {
@@ -86,7 +87,11 @@ const Charts = ({ layer }) => {
   const newData = formatData(data);
 
   console.log('newData-------------', newData);
+
   const size = layer.serviceCallData.length;
+  console.log('layer.serviceCallData--', layer.serviceCallData);
+  //const size = layer.serviceCallData;
+
   const view = size === 327659 || 0;
 
   // const obj = newData[0];
@@ -158,7 +163,7 @@ const Charts = ({ layer }) => {
         >
           Number of incidents by Crime Category
         </div>
-        <div style={{ height: 300 }}>
+        <div style={{ height: 250 }}>
           <BarChart data={newData} />
         </div>
 
@@ -178,6 +183,23 @@ const Charts = ({ layer }) => {
             'only available after a crime category is selected'
           ) : (
             <LineChart data={lineData} />
+          )}
+        </div>
+        <div
+          style={{
+            fontSize: '1.3em',
+            fontWeigh: 500,
+            borderBottom: `1px solid ${colors.primary}`,
+            color: colors.primary,
+          }}
+        >
+          Ranking of incidents under each crime category
+        </div>
+        <div style={{ height: 400 }}>
+          {view ? (
+            'only available after a crime category is selected'
+          ) : (
+            <RankingChart data={lineData} />
           )}
         </div>
       </div>

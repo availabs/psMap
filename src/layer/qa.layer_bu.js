@@ -5,15 +5,22 @@ import * as d3 from 'd3-scale';
 import DisplayComponent from './DisplayComponent.js';
 import Charts from './ChartsComponents';
 import { EventSource } from './eventSource';
+import { Dropdown } from './Dropdown';
 
 class ServiceCallLayer extends MapLayer {
+  constructor(...args) {
+    super(...args);
+
+    this.filterByCode = this.filterByCode.bind(this);
+  }
   onAdd(map) {
     console.log('gonna fetch');
     // fetch('/data/Tucson_PS_18_20.json')
     // fetch('/data/test_data_clean.json')
     // fetch('/data/test_data_2018_shp_qgis_1.json')
-    fetch('/data/test_data_all_api_merged_yearocc.json') // incident data
-      // fetch('/data/test_data_all_servicecall_api_merged.json')  // latest service call data --has null values which create error
+    // fetch('/data/test_data_all_servicecall_api_merged.json')  // latest service call data --has null values which create error
+    // fetch('/data/test_data_all_api_merged_yearocc.json') // incident data
+    fetch('/data/tucson_api_merge_all_new_1.json') //incident data with crime category
       .then((r) => r.json())
       .then((data) => {
         console.log('got data', data);
@@ -114,7 +121,7 @@ class ServiceCallLayer extends MapLayer {
         });
 
         map.on('moveend', (e) => {
-          console.time('----update charts----');
+          // console.time('----update charts----');
 
           var features = map.queryRenderedFeatures(e.point, {
             layers: ['service-calls'],
@@ -127,59 +134,55 @@ class ServiceCallLayer extends MapLayer {
 
           this.serviceCallData = features.map((d) => d.properties);
 
-          console.timeEnd('----update charts----');
+          // console.timeEnd('----update charts----');
 
           this.forceUpdate();
-
-          console.log(
-            'movend filter',
-            this.serviceCallData.length,
-            this.fullData.length,
-          );
-
-          // render by code
-          // this.filterByCode('0603');
-
-          //failed tries. basically .filter too slow
-          //   let newDataIds = features.map((d) => d.properties.id);
-          //   this.serviceCallData = this.fullData.filter((d) =>
-          //     newDataIds.includes(d.id),
-          //   );
-          //   console.log(
-          //     'movend filter',
-          //     this.serviceCallData.length,
-          //     this.fullData.length,
-          //   );
-
-          // this.serviceCallData.filter((d) => {
-          //   if (newDataIds.includes(d.id)) return true;
-          // });
-
           // console.log(
-          //   'this.serviceCallData----',
-          //   this.serviceCallData,
-          //   newDataIds,
+          //   'movend filter',
+          //   this.serviceCallData.length,
+          //   this.fullData.length,
           // );
 
-          // include slow so tried this same function for include
-          //this.serviceCallData = this.fullData.filter(
-          //     (d) => newDataIds.indexOf(d.id) !== -1,
-          //   );
+          // filter by code or category
+          // this.filterByCode('0603');
+          // this.filterByCode('Violation');
         });
       });
   }
 
-  filterByCode(code) {
-    this.serviceCallData = this.fullData.filter((d) => d.eventCode === code);
+  filterByCode(category) {
+    //1st try
+    // this.serviceCallData = this.fullData.filter((d) => d.eventCode === code);
+    // this.forceUpdate();
+    console.log('category----', category);
+
+    //2nd try
     let filteredSource = {
       type: 'FeatureCollection',
       features: this.geojsonFull.features.filter(
-        (d) => d.properties.eventCode === code,
+        (d) => d.properties.crimeCategory === category,
       ),
     };
-    // resets geojson
+
+    // resets geojson (map)
     this.map.getSource('service-calls-src').setData(filteredSource);
+
+    //reset serviceCallData (charts)
+    this.serviceCallData = filteredSource.features.map((d) => d.properties);
+    this.forceUpdate();
   }
+
+  // render(map) {
+  //   if (this.crimeCategory === 'All Categories') {
+  //     map.setFilter('service-calls-src', ['has', 'crimeCategory']);
+  //   } else {
+  //     map.setFilter('service-calls-src', [
+  //       '==',
+  //       ['get', 'crimeCategory'],
+  //       this.crimeCategory,
+  //     ]);
+  //   }
+  // }
 }
 
 export default (props = {}) =>
@@ -188,6 +191,12 @@ export default (props = {}) =>
     serviceCallData: [],
     sources: [],
     layers: [],
+
+    // updateData: function (k, v) {
+    //   this[k] = v;
+    //   this.render(this.map);
+    // },
+    // crimeCategory: 'All Category',
 
     meta: 'Not Defined Yet',
 
@@ -217,27 +226,48 @@ export default (props = {}) =>
     },
     infoBoxes: {
       Overview: {
+        title: '',
         comp: DisplayComponent,
         show: true,
       },
+      SelectbyCatagory: {
+        title: '',
+        comp: ({ layer }) => {
+          return (
+            <div>
+              <Dropdown selectByCategory={layer.filterByCode} layer={layer} />
+              {/* <Dropdown /> */}
+              {/* <Dropdown layer={layer} /> */}
+            </div>
+          );
+        },
+        // comp: Dropdown,
+        show: true,
+      },
+      // Overview: {
+      //   comp: Dropdown,
+      //   show: true,
+      // },
+
       Charts: {
+        title: '',
         comp: Charts,
         show: true,
       },
     },
 
-    modals: {
-      RingModal: {
-        title: 'Tree Ring Widths',
-        comp: ({ layer }) => {
-          return (
-            <div>
-              <Charts meta={layer.meta} />
-            </div>
-          );
-        },
+    // modals: {
+    //   RingModal: {
+    //     title: 'Tree Ring Widths',
+    //     comp: ({ layer }) => {
+    //       return (
+    //         <div>
+    //           <Charts meta={layer.meta} />
+    //         </div>
+    //       );
+    //     },
 
-        show: false,
-      },
-    },
+    //     show: false,
+    //   },
+    // },
   });
