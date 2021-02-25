@@ -137,11 +137,11 @@ class ServiceCallLayer extends MapLayer {
           // console.timeEnd('----update charts----');
 
           this.forceUpdate();
-          console.log(
-            'movend filter',
-            this.serviceCallData.length,
-            this.fullData.length,
-          );
+          // console.log(
+          //   'movend filter',
+          //   this.serviceCallData.length,
+          //   this.fullData.length,
+          // );
 
           // filter by code or category
           // this.filterByCode('0603');
@@ -163,9 +163,13 @@ class ServiceCallLayer extends MapLayer {
         (d) => d.properties.crimeCategory === category,
       ),
     };
-    // resets geojson
+
+    // resets geojson (map)
     this.map.getSource('service-calls-src').setData(filteredSource);
-    //this.forceUpdate();
+
+    //reset serviceCallData (charts)
+    this.serviceCallData = filteredSource.features.map((d) => d.properties);
+    this.forceUpdate();
   }
 
   // render(map) {

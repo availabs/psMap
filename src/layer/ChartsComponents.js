@@ -170,7 +170,7 @@ const Charts = ({ layer }) => {
             color: colors.primary,
           }}
         >
-          Number of incidents under eacg crime category
+          Number of incidents under each crime category
         </div>
 
         <div style={{ height: 400 }}>
