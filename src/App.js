@@ -18,7 +18,7 @@ function App() {
           },
         ]}
         center={[-111, 32.208]}
-        zoom={7.5}
+        zoom={8.5}
         sidebar={false}
         header="Transit Data"
       />

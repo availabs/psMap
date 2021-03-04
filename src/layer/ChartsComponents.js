@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import BarChart from './BarChartComponent';
 import LineChart from './LineChartComponent';
 import RankingChart from './RankingChartComponent';
+import BumpChart from './BumpChartComponent';
 import { values } from 'lodash';
 
 const Charts = ({ layer }) => {
@@ -89,15 +90,21 @@ const Charts = ({ layer }) => {
   console.log('newData-------------', newData);
 
   const size = layer.serviceCallData.length;
-  console.log('layer.serviceCallData--', layer.serviceCallData);
-  //const size = layer.serviceCallData;
+  console.log(
+    'layer.serviceCallData-----------------',
+    layer,
+    layer.state.categoryVal,
+  );
+
+  const categoryTrue = layer.state.categoryVal === 'All Categories';
 
   const view = size === 327659 || 0;
 
   // const obj = newData[0];
 
   // const size = Object.keys(obj).length;
-  console.log('size---', size, view);
+
+  //console.log('size---', size, view, categoryTrue);
 
   //format Linechart Data
   function formatLineData(inArray) {
@@ -180,7 +187,7 @@ const Charts = ({ layer }) => {
 
         <div style={{ height: 400 }}>
           {view ? (
-            'only available after a crime category is selected'
+            'only available after a crime category is selected or zoom in'
           ) : (
             <LineChart data={lineData} />
           )}
@@ -197,9 +204,27 @@ const Charts = ({ layer }) => {
         </div>
         <div style={{ height: 400 }}>
           {view ? (
-            'only available after a crime category is selected'
+            'only available after a crime category is selected or zoom in'
           ) : (
             <RankingChart data={lineData} />
+          )}
+        </div>
+
+        <div
+          style={{
+            fontSize: '1.3em',
+            fontWeigh: 500,
+            borderBottom: `1px solid ${colors.primary}`,
+            color: colors.primary,
+          }}
+        >
+          AreaBump of incidents under each crime category
+        </div>
+        <div style={{ height: 400 }}>
+          {view ? (
+            'only available after a crime category is selected or zoom in'
+          ) : (
+            <BumpChart data={lineData} />
           )}
         </div>
       </div>

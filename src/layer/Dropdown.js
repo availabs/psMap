@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { values } from 'lodash';
+import Charts from './ChartsComponents';
 
 export class Dropdown extends React.Component {
   constructor(props) {

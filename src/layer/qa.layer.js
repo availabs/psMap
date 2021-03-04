@@ -1,18 +1,20 @@
 import React from 'react';
 import MapLayer from 'AvlMap/MapLayer';
-import length from '@turf/length';
-import * as d3 from 'd3-scale';
 import DisplayComponent from './DisplayComponent.js';
 import Charts from './ChartsComponents';
-import { EventSource } from './eventSource';
 import { Dropdown } from './Dropdown';
 
 class ServiceCallLayer extends MapLayer {
-  constructor(...args) {
-    super(...args);
+  constructor(...props) {
+    super(...props);
+
+    this.state = {
+      categoryVal: 'All Categories',
+    };
 
     this.filterByCode = this.filterByCode.bind(this);
   }
+
   onAdd(map) {
     console.log('gonna fetch');
     // fetch('/data/Tucson_PS_18_20.json')
@@ -27,6 +29,9 @@ class ServiceCallLayer extends MapLayer {
         this.serviceCallData = data.features.map((d) => d.properties);
         this.fullData = this.serviceCallData;
         this.geojsonFull = data;
+        this.catval = 'All Categories';
+        console.log('catval1----', this.catval);
+
         this.forceUpdate();
 
         map.addSource('service-calls-src', {
@@ -38,6 +43,7 @@ class ServiceCallLayer extends MapLayer {
           id: 'service-calls',
           type: 'circle',
           source: 'service-calls-src',
+          // maxzoom: 15,
           layout: {
             // make layer visible by default
             visibility: 'visible',
@@ -52,7 +58,7 @@ class ServiceCallLayer extends MapLayer {
           id: 'service-calls-heatmap',
           source: 'service-calls-src',
           type: 'heatmap',
-          // maxzoom: 20,
+          //maxzoom: 20,
           paint: {
             // Adjust the heatmap radius by zoom level
             'heatmap-radius': [
@@ -69,7 +75,7 @@ class ServiceCallLayer extends MapLayer {
               'interpolate',
               ['linear'],
               ['zoom'],
-              5,
+              9,
               1,
               10,
               0,
@@ -104,8 +110,10 @@ class ServiceCallLayer extends MapLayer {
       });
   }
 
+  //  catval = '';
+
   filterByCode(category) {
-    //  console.log('category----', category);
+    console.log('category----', category);
 
     if (category === 'All Categories') {
       //resets geojson (map)
@@ -123,11 +131,17 @@ class ServiceCallLayer extends MapLayer {
         ),
       };
 
+      // this.setState({ categoryVal: category });
+
+      // this.catval = category;
+      // console.log('catval2----', this.catval);
+
       // resets geojson (map)
       this.map.getSource('service-calls-src').setData(filteredSource);
 
       //reset serviceCallData (charts)
       this.serviceCallData = filteredSource.features.map((d) => d.properties);
+
       this.forceUpdate();
     }
   }
@@ -178,8 +192,6 @@ export default (props = {}) =>
           return (
             <div>
               <Dropdown selectByCategory={layer.filterByCode} layer={layer} />
-              {/* <Dropdown /> */}
-              {/* <Dropdown layer={layer} /> */}
             </div>
           );
         },
@@ -189,7 +201,14 @@ export default (props = {}) =>
 
       Charts: {
         title: '',
-        comp: Charts,
+        comp: ({ layer }) => {
+          return (
+            <div>
+              <Charts layer={layer} />
+            </div>
+          );
+        },
+        // comp: Charts,
         show: true,
       },
     },
