@@ -1,22 +1,23 @@
-import React from 'react';
+import React, { Component } from 'react';
 import MapLayer from 'AvlMap/MapLayer';
 import DisplayComponent from './DisplayComponent.js';
-import Charts from './ChartsComponents';
-import { Dropdown } from './Dropdown';
+//import Charts from './ChartsComponents';
+import Dropdown from './Dropdown';
 
 class ServiceCallLayer extends MapLayer {
   constructor(...props) {
     super(...props);
 
-    this.state = {
-      categoryVal: 'All Categories',
-    };
+    // this.state = {
+    //   categoryVal: 'All Categories',
+    // };
 
     this.filterByCode = this.filterByCode.bind(this);
   }
 
   onAdd(map) {
     console.log('gonna fetch');
+
     // fetch('/data/Tucson_PS_18_20.json')
     // fetch('/data/test_data_clean.json')
     // fetch('/data/test_data_2018_shp_qgis_1.json')
@@ -29,8 +30,6 @@ class ServiceCallLayer extends MapLayer {
         this.serviceCallData = data.features.map((d) => d.properties);
         this.fullData = this.serviceCallData;
         this.geojsonFull = data;
-        this.catval = 'All Categories';
-        console.log('catval1----', this.catval);
 
         this.forceUpdate();
 
@@ -75,10 +74,10 @@ class ServiceCallLayer extends MapLayer {
               'interpolate',
               ['linear'],
               ['zoom'],
-              9,
-              1,
-              10,
-              0,
+              8, // opacity start zoom
+              1, //start opacity level
+              12, // opacity end zoom
+              0, //end opacity level
             ],
           },
         });
@@ -110,10 +109,13 @@ class ServiceCallLayer extends MapLayer {
       });
   }
 
-  //  catval = '';
+  // categoryUpdate(category) {
+  //   console.log('categoryUpdate', category);
+  //   return category;
+  // }
 
   filterByCode(category) {
-    console.log('category----', category);
+    console.log('category', category);
 
     if (category === 'All Categories') {
       //resets geojson (map)
@@ -130,11 +132,6 @@ class ServiceCallLayer extends MapLayer {
           (d) => d.properties.crimeCategory === category,
         ),
       };
-
-      // this.setState({ categoryVal: category });
-
-      // this.catval = category;
-      // console.log('catval2----', this.catval);
 
       // resets geojson (map)
       this.map.getSource('service-calls-src').setData(filteredSource);
@@ -189,28 +186,34 @@ export default (props = {}) =>
       SelectbyCatagory: {
         title: '',
         comp: ({ layer }) => {
+          console.log('LAYER DATA:', layer.serviceCallData);
           return (
             <div>
-              <Dropdown selectByCategory={layer.filterByCode} layer={layer} />
+              <Dropdown
+                layer={layer}
+                //serviceCallData={layer.serviceCallData}
+                selectByCategory={layer.filterByCode}
+                //   categoryUpdate={layer.categoryUpdate}
+              />
             </div>
           );
         },
-        // comp: Dropdown,
         show: true,
       },
 
-      Charts: {
-        title: '',
-        comp: ({ layer }) => {
-          return (
-            <div>
-              <Charts layer={layer} />
-            </div>
-          );
-        },
-        // comp: Charts,
-        show: true,
-      },
+      // Charts: {
+      //   title: '',
+      //   comp: ({ layer }) => {
+      //     return (
+      //       <div>
+      //         <Charts layer={layer} />
+      //         {/* <Charts layer={layer} category={layer.categoryUpdate} /> */}
+      //       </div>
+      //     );
+      //   },
+      //   // comp: Charts,
+      //   show: true,
+      // },
     },
 
     // modals: {

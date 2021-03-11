@@ -5,12 +5,13 @@ import LineChart from './LineChartComponent';
 import RankingChart from './RankingChartComponent';
 import BumpChart from './BumpChartComponent';
 import { values } from 'lodash';
-
-const Charts = ({ layer }) => {
+// , serviceCallData
+const Charts = ({ layer, category }) => {
   const colors = {
     primary: '#333',
     light: '#aaa',
   };
+  const serviceCallData = layer.serviceCallData;
   // const callsByYear = d3.group(layer.serviceCallData, (d) => d.year);
   // console.log('callsByYear', callsByYear);
 
@@ -22,17 +23,22 @@ const Charts = ({ layer }) => {
   // console.log('callsByYearEventtype', callsByYearEventtype);
 
   const callsByYearByEventCount = d3.rollups(
-    layer.serviceCallData,
+    serviceCallData,
     (v) => v.length,
     (d) => d.year,
     // (d) => d.eventType,
     (d) => d.crimeCategory,
   );
   const data = callsByYearByEventCount;
-  console.log('data', data);
+  console.log(
+    'data----------------------------------',
+    data,
+    serviceCallData,
+    category,
+  );
 
   const callsByEventByYearCount = d3.rollups(
-    layer.serviceCallData,
+    serviceCallData,
     (v) => v.length,
     // (d) => d.eventCode,
     (d) => d.eventType,
@@ -76,6 +82,7 @@ const Charts = ({ layer }) => {
 
       for (let j = 0; j < attrs.length; j++) {
         let key = attrs[j][0];
+        // obj[key] = attrs[j][1];
         obj[key.replace(/\s+$/, '')] = attrs[j][1];
         //  or .trim() ,
       }
@@ -89,19 +96,16 @@ const Charts = ({ layer }) => {
 
   console.log('newData-------------', newData);
 
-  const size = layer.serviceCallData.length;
-  console.log(
-    'layer.serviceCallData-----------------',
-    layer,
-    layer.state.categoryVal,
-  );
-
-  const categoryTrue = layer.state.categoryVal === 'All Categories';
+  const size = serviceCallData.length;
+  console.log('layer.serviceCallData-----------------', layer);
 
   const view = size === 327659 || 0;
 
-  // const obj = newData[0];
+  //const category = 'All Categories';
+  // const category = this.props.category;
+  const categoryTrue = category === 'all_categories';
 
+  // const obj = newData[0];
   // const size = Object.keys(obj).length;
 
   //console.log('size---', size, view, categoryTrue);
@@ -186,8 +190,8 @@ const Charts = ({ layer }) => {
         </div>
 
         <div style={{ height: 400 }}>
-          {view ? (
-            'only available after a crime category is selected or zoom in'
+          {categoryTrue ? (
+            'only available after a crime category is selected'
           ) : (
             <LineChart data={lineData} />
           )}
@@ -203,8 +207,8 @@ const Charts = ({ layer }) => {
           Ranking of incidents under each crime category
         </div>
         <div style={{ height: 400 }}>
-          {view ? (
-            'only available after a crime category is selected or zoom in'
+          {categoryTrue ? (
+            'only available after a crime category is selected'
           ) : (
             <RankingChart data={lineData} />
           )}
@@ -221,11 +225,16 @@ const Charts = ({ layer }) => {
           AreaBump of incidents under each crime category
         </div>
         <div style={{ height: 400 }}>
-          {view ? (
-            'only available after a crime category is selected or zoom in'
+          {categoryTrue ? (
+            'only available after a crime category is selected'
           ) : (
             <BumpChart data={lineData} />
           )}
+          {/* {view ? (
+            'only available after a crime category is selected'
+          ) : (
+            <BumpChart data={lineData} />
+          )} */}
         </div>
       </div>
     )
