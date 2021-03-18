@@ -24,9 +24,16 @@ class ServiceCallLayer extends MapLayer {
     // fetch('/data/test_data_all_servicecall_api_merged.json')  // latest service call data --has null values which create error
     // fetch('/data/test_data_all_api_merged_yearocc.json') // incident data
     fetch('/data/tucson_api_merge_all_new_1.json') //incident data with crime category
+      // fetch(
+      //   'http://mumford.albany.edu/downloads/json/tucson_api_merge_all_new_1.json',
+      // )
       .then((r) => r.json())
       .then((data) => {
-        //console.log('got data', data);
+        console.log('got data', data);
+
+        //worth reading this to dealwith big json
+        // https://docs.mapbox.com/help/troubleshooting/working-with-large-geojson-data/
+
         this.serviceCallData = data.features.map((d) => d.properties);
         this.fullData = this.serviceCallData;
         this.geojsonFull = data;
@@ -34,14 +41,20 @@ class ServiceCallLayer extends MapLayer {
         this.forceUpdate();
 
         map.addSource('service-calls-src', {
-          type: 'geojson',
-          data: data,
+          type: 'vector',
+          url: 'mapbox://am3081.8x1wbrc6',
         });
+
+        // map.addSource('service-calls-src', {
+        //   type: 'geojson',
+        //   data: data,
+        // });
 
         map.addLayer({
           id: 'service-calls',
           type: 'circle',
           source: 'service-calls-src',
+          'source-layer': 'tucson_api_merge_all_new_1',
           // maxzoom: 15,
           layout: {
             // make layer visible by default
@@ -56,6 +69,7 @@ class ServiceCallLayer extends MapLayer {
         map.addLayer({
           id: 'service-calls-heatmap',
           source: 'service-calls-src',
+          'source-layer': 'tucson_api_merge_all_new_1',
           type: 'heatmap',
           //maxzoom: 20,
           paint: {
@@ -76,7 +90,7 @@ class ServiceCallLayer extends MapLayer {
               ['zoom'],
               8, // opacity start zoom
               1, //start opacity level
-              12, // opacity end zoom
+              16, // opacity end zoom
               0, //end opacity level
             ],
           },
@@ -109,18 +123,35 @@ class ServiceCallLayer extends MapLayer {
       });
   }
 
-  // categoryUpdate(category) {
-  //   console.log('categoryUpdate', category);
-  //   return category;
-  // }
-
   filterByCode(category) {
     console.log('category', category);
 
     if (category === 'All Categories') {
       //resets geojson (map)
       let fullSource = this.geojsonFull;
-      this.map.getSource('service-calls-src').setData(fullSource);
+      //this.map.getSource('service-calls-src').setData(fullSource);
+
+      // display only features with the 'name' property 'USA'
+
+      let filter = [
+        'match',
+        ['get', 'crimeCategory'],
+        [
+          'Accident',
+          'Assist',
+          'Emergency',
+          'Other',
+          'Property',
+          'Quality of Life',
+          'Violation',
+          'Violent',
+        ],
+        true,
+        false,
+      ];
+
+      this.map.setFilter('service-calls', filter);
+      this.map.setFilter('service-calls-heatmap', filter);
 
       //reset charts
       this.serviceCallData = this.fullData;
@@ -134,7 +165,18 @@ class ServiceCallLayer extends MapLayer {
       };
 
       // resets geojson (map)
-      this.map.getSource('service-calls-src').setData(filteredSource);
+      // this.map.getSource('service-calls-src').setData(filteredSource);
+
+      this.map.setFilter('service-calls', [
+        '==',
+        ['get', 'crimeCategory'],
+        category,
+      ]);
+      this.map.setFilter('service-calls-heatmap', [
+        '==',
+        ['get', 'crimeCategory'],
+        category,
+      ]);
 
       //reset serviceCallData (charts)
       this.serviceCallData = filteredSource.features.map((d) => d.properties);
