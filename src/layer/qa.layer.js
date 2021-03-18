@@ -12,7 +12,7 @@ class ServiceCallLayer extends MapLayer {
     //   categoryVal: 'All Categories',
     // };
 
-    this.filterByCode = this.filterByCode.bind(this);
+    this.filterByCategory = this.filterByCategory.bind(this);
   }
 
   onAdd(map) {
@@ -40,15 +40,16 @@ class ServiceCallLayer extends MapLayer {
 
         this.forceUpdate();
 
-        map.addSource('service-calls-src', {
-          type: 'vector',
-          url: 'mapbox://am3081.8x1wbrc6',
-        });
-
         // map.addSource('service-calls-src', {
         //   type: 'geojson',
         //   data: data,
         // });
+
+        //chnage addLayer source to mbtile
+        map.addSource('service-calls-src', {
+          type: 'vector',
+          url: 'mapbox://am3081.8x1wbrc6',
+        });
 
         map.addLayer({
           id: 'service-calls',
@@ -117,13 +118,13 @@ class ServiceCallLayer extends MapLayer {
           // );
 
           // filter by code or category
-          // this.filterByCode('0603');
-          // this.filterByCode('Violation');
+          // this.filterByCategory('0603');
+          // this.filterByCategory('Violation');
         });
       });
   }
 
-  filterByCode(category) {
+  filterByCategory(category) {
     console.log('category', category);
 
     if (category === 'All Categories') {
@@ -234,7 +235,7 @@ export default (props = {}) =>
               <Dropdown
                 layer={layer}
                 //serviceCallData={layer.serviceCallData}
-                selectByCategory={layer.filterByCode}
+                selectByCategory={layer.filterByCategory}
                 //   categoryUpdate={layer.categoryUpdate}
               />
             </div>
