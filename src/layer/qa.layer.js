@@ -35,7 +35,23 @@ class ServiceCallLayer extends MapLayer {
         // https://docs.mapbox.com/help/troubleshooting/working-with-large-geojson-data/
 
         this.serviceCallData = data.features.map((d) => d.properties);
-        this.fullData = this.serviceCallData;
+        this.fullData = this.serviceCallData.sort((a, b) => a.year - b.year);
+        console.log('this.fullData-----', this.fullData);
+
+        //failed tries
+        //this.sortedFullData = this.fullData.sort(sortFunc);
+
+        // function sortFunc(ob1, ob2) {
+        //   if (ob1.year < ob2.year) {
+        //     return ob1;
+        //   } else {
+        //     return ob2;
+        //   }
+        // }
+
+        // this.sortedFullData = this.fullData.sort((a, b) => b.year - a.year);
+
+        // console.log('this.sortedFullData-----', this.sortedFullData);
         this.geojsonFull = data;
 
         this.forceUpdate();
@@ -106,7 +122,9 @@ class ServiceCallLayer extends MapLayer {
 
           //  console.log('features----', features);
 
-          this.serviceCallData = features.map((d) => d.properties);
+          var newFeatures = features.map((d) => d.properties);
+
+          this.serviceCallData = newFeatures.sort((a, b) => a.year - b.year);
 
           // console.timeEnd('----update charts----');
 
@@ -180,7 +198,12 @@ class ServiceCallLayer extends MapLayer {
       ]);
 
       //reset serviceCallData (charts)
-      this.serviceCallData = filteredSource.features.map((d) => d.properties);
+
+      var newFeatures = filteredSource.features.map((d) => d.properties);
+
+      this.serviceCallData = newFeatures.sort((a, b) => a.year - b.year);
+
+      // this.serviceCallData = filteredSource.features.map((d) => d.properties);
 
       this.forceUpdate();
     }
