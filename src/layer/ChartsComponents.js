@@ -97,9 +97,8 @@ const Charts = ({ layer, category }) => {
   console.log('newData-------------', newData);
 
   const size = serviceCallData.length;
-  console.log('layer.serviceCallData-----------------', layer);
 
-  const view = size === 327659 || 0;
+  //const view = size === 327659 || 0;
 
   //const category = 'All Categories';
   // const category = this.props.category;
